@@ -11,6 +11,7 @@
 
   imports = [
     ./dotnet
+    ./fd
     ./golang
   ];
 
