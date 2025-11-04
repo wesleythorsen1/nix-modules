@@ -10,6 +10,7 @@
   };
 
   imports = [
+    ./dotnet
     ./golang
   ];
 
