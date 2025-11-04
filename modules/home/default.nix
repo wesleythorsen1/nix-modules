@@ -7,10 +7,6 @@
 {
   options.custom = {
     enable = lib.mkEnableOption "enable/disable all custom modules";
-    modules = lib.mkOption {
-      type = lib.types.attrs;
-      default = { };
-    };
   };
 
   imports = [
