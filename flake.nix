@@ -10,11 +10,26 @@
   outputs =
     {
       # self,
-      # nixpkgs,
+      nixpkgs,
       # home-manager,
       ...
     }:
+    let
+      forAllSystems =
+        f:
+        nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" ] (
+          system:
+          let
+            pkgs = import nixpkgs { inherit system; };
+          in
+          f pkgs
+        );
+    in
     {
       homeManagerModules.default = import ./modules/home;
+
+      packages = forAllSystems (pkgs: {
+        pbfmt = pkgs.callPackage ./pkgs/pbfmt/default.nix { };
+      });
     };
 }

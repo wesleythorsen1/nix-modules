@@ -1,0 +1,63 @@
+#!/bin/sh
+set -eu
+
+VERSION="0.1.0"
+
+# -------- parser definitions -----------
+# @getoptions
+parser_definition() {
+  setup   REST help:usage abbr:true -- "Usage: pbfmt <command> [options...]" ''
+	# msg -- 'Global options:'
+	# flag    TTY_OUT   -t --tty   -- "write output to stdout instead of copying back to clipboard"
+	disp    :usage    -h --help
+	disp    VERSION   -v --VERSION
+
+	msg -- '' 'Commands:'
+	cmd quote -- 'Format clipboard as markdown block-quote (prefix each line with "> ")'
+}
+parser_definition_quote() {
+  setup   REST_QUOTE help:usage abbr:true -- "Usage: pbfmt quote [options...]" ''
+  msg -- 'Global options:'
+	flag    TTY_OUT   -t --tty   -- "write output to stdout instead of copying back to clipboard"
+  disp    :usage    -h --help
+}
+# @end
+
+# -------- generated parsers ------------
+# @gengetoptions parser -i parser_definition pbfmt_parse
+# @end
+# @gengetoptions parser -i parser_definition_quote pbfmt_quote_parse
+# @end
+
+# --------------- main ------------------
+pbfmt_parse "$@"
+eval "set -- $REST"
+
+cmd="${1-}"
+[ -n "$cmd" ] || { usage; exit 2; }
+shift
+
+# read and write to clipboard by default
+INPUT=pbpaste
+OUTPUT=pbcopy
+
+# read from stdin if it's been redirected
+if [ ! -t 0 ]; then INPUT=cat; fi
+
+# write to stdout if it's been redirected
+if [ ! -t 1 ]; then OUTPUT=cat; fi
+
+case "$cmd" in
+  quote)
+    pbfmt_quote_parse "$@"
+    eval "set -- $REST_QUOTE"
+
+    # write to stdout if --tty or -t flag used
+    if [ "${TTY_OUT-}" = "1" ]; then OUTPUT=cat; fi
+
+    $INPUT | sed 's/^/> /' | $OUTPUT
+    ;;
+  -h|--help) usage ;;
+  -v|--version) printf '%s\n' "$VERSION" ;;
+  *) printf 'Not a command: %s\n' "$cmd" >&2; exit 2 ;;
+esac
