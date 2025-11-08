@@ -1,13 +1,11 @@
 {
-  config,
-  lib,
   ...
 }:
 
 {
-  options.custom = {
-    enable = lib.mkEnableOption "enable/disable all custom modules";
-  };
+  # options.custom = {
+  #   enable = lib.mkEnableOption "enable/disable all custom modules";
+  # };
 
   imports = [
     ./dotnet
@@ -16,9 +14,9 @@
     ./git
     ./gh
     ./golang
+    ./pbfmt
   ];
 
-  config = lib.mkIf config.custom.enable {
-    # Optional: global on/off gate
-  };
+  # Optional: global on/off gate
+  # config = lib.mkIf config.custom.enable { };
 }

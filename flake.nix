@@ -31,5 +31,9 @@
       packages = forAllSystems (pkgs: {
         pbfmt = pkgs.callPackage ./pkgs/pbfmt/default.nix { };
       });
+
+      overlays.default = final: prev: {
+        pbfmt = prev.callPackage ./pkgs/pbfmt/default.nix { };
+      };
     };
 }
