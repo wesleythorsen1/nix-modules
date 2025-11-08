@@ -9,10 +9,10 @@
 # gh repo list bussin-io -L 500 --json nameWithOwner --jq '.[].nameWithOwner' | xargs -n1 ghq get
 
 let
-  cfg = config.custom.modules.ghq;
+  cfg = config.custom.modules.gh.ghq;
 in
 {
-  options.custom.modules.ghq = {
+  options.custom.modules.gh.ghq = {
     enable = lib.mkEnableOption "Configure ghq (root, package)";
     root = lib.mkOption {
       type = lib.types.str;
@@ -29,10 +29,9 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.ghq ];
 
-    # Prefer Git config for ghq.root
-    programs.git = {
-      enable = true;
-      settings.ghq.root = cfg.root;
+    programs = {
+      git.settings.ghq.root = cfg.root;
+      gh-dash.settings.repoPaths = [ cfg.root ];
     };
 
     # Optional: set GHQ_ROOT (note it overrides ghq.root if present)

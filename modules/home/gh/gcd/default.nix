@@ -6,11 +6,11 @@
 }:
 
 let
-  cfg = config.custom.modules.gcd;
+  cfg = config.custom.modules.gh.gcd;
   fzfOpts = lib.concatStringsSep " " cfg.fzfOptions;
 in
 {
-  options.custom.modules.gcd = {
+  options.custom.modules.gh.gcd = {
     enable = lib.mkEnableOption "ghq + fzf picker (gcd + Ctrl+g)";
     key = lib.mkOption {
       type = lib.types.str;
@@ -34,9 +34,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # We only add fzf here; ghq should come from the ghq module.
+    # FIXME: use `options.custom.modules.fzf.enable = true;` instead
     home.packages = [ pkgs.fzf ];
 
+    # FIXME: ensure zsh enabled first
+    # TODO: enable for bash as well?
     programs.zsh = {
       enable = true;
       initContent = ''

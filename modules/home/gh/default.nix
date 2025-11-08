@@ -52,43 +52,6 @@ in
         pc = "pr create";
       };
     };
-
-    ghq = {
-      enable = lib.mkEnableOption "Configure ghq (repo management)";
-      root = lib.mkOption {
-        type = lib.types.str;
-        default = "${config.home.homeDirectory}/repos";
-        description = "ghq root directory";
-      };
-      useEnvVar = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = "Set GHQ_ROOT environment variable";
-      };
-    };
-
-    gcd = {
-      enable = lib.mkEnableOption "ghq + fzf picker (gcd + Ctrl+g)";
-      key = lib.mkOption {
-        type = lib.types.str;
-        default = "^g";
-        description = "Zsh keybinding for the gcd picker";
-      };
-      fzfOptions = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [
-          "--height=50%"
-          "--reverse"
-          "--border"
-        ];
-        description = "Extra flags passed to fzf";
-      };
-      addCodeHelper = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Also add gcode (pick repo → open in VS Code)";
-      };
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -105,26 +68,6 @@ in
         }
         cfg.settings
       ];
-    };
-
-    programs.gh-dash = {
-      enable = true;
-      settings = {
-        repoPaths = lib.mkIf cfg.ghq.enable [ cfg.ghq.root ];
-      };
-    };
-
-    ghq = lib.mkIf cfg.ghq.enable {
-      enable = true;
-      root = cfg.ghq.root;
-      useEnvVar = cfg.ghq.useEnvVar;
-    };
-
-    gcd = lib.mkIf cfg.gcd.enable {
-      enable = true;
-      key = cfg.gcd.key;
-      fzfOptions = cfg.gcd.fzfOptions;
-      addCodeHelper = cfg.gcd.addCodeHelper;
     };
   };
 }

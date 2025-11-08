@@ -13,6 +13,7 @@
     ./dotnet
     ./fd
     ./fzf
+    ./git
     ./gh
     ./golang
   ];
