@@ -38,6 +38,7 @@
     ./jq
     ./jwt-cli
     ./kubernetes-helm
+    ./miller
     ./mysql80
     ./nerd-fonts
     ./ngrok
