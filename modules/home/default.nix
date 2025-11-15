@@ -56,6 +56,7 @@
     ./sbcl
     ./sd
     ./slack
+    ./sqlite
     ./terraform
     ./watch
     ./wget
